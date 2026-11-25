@@ -1,0 +1,8 @@
+[Unit]
+Description=Check victor_wiki official stable releases daily
+[Timer]
+OnCalendar=*-*-* 04:30:00 Asia/Shanghai
+RandomizedDelaySec=15m
+Persistent=true
+[Install]
+WantedBy=timers.target

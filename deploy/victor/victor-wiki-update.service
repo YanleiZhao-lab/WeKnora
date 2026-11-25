@@ -1,0 +1,14 @@
+[Unit]
+Description=victor_wiki stable release update
+After=network-online.target docker.service victor-wiki.service
+Requires=docker.service
+Wants=network-online.target victor-wiki.service
+RequiresMountsFor=/data1/victor_wiki /home/lenovo/victor_wiki/current
+[Service]
+User=lenovo
+SupplementaryGroups=docker
+Type=oneshot
+WorkingDirectory=/home/lenovo/victor_wiki/current
+ExecStart=/usr/bin/bash /home/lenovo/victor_wiki/current/scripts/victor-update.sh
+TimeoutStartSec=6h
+Nice=10

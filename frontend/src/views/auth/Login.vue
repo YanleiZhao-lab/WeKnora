@@ -96,8 +96,8 @@
     </div>
 
     <!-- Logo - Top Left -->
-    <a href="https://github.com/Tencent/WeKnora" target="_blank" class="header-logo" :title="$t('common.github')">
-      <img src="@/assets/img/weknora.png" alt="WeKnora" class="logo-image" />
+    <a :href="branding.homeUrl" target="_blank" rel="noopener noreferrer" class="header-logo" :title="$t('common.github')">
+      <BrandLogo class="logo-image" />
     </a>
 
     <!-- Header Links - Top Right -->
@@ -337,6 +337,8 @@
 </template>
 
 <script setup lang="ts">
+import BrandLogo from '@/components/BrandLogo.vue'
+import branding from '@/config/branding.json'
 import { ref, reactive, nextTick, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { MessagePlugin } from 'tdesign-vue-next'
@@ -1839,7 +1841,7 @@ html[theme-mode="dark"] {
     stroke: rgba(255, 255, 255, 0.25);
   }
 
-  .header-logo .logo-image {
+  .header-logo img.logo-image {
     filter: invert(1) hue-rotate(180deg) brightness(1.1);
   }
 

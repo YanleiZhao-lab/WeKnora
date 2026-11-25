@@ -1,0 +1,16 @@
+builtin_models:
+  - id: victor-local-chat
+    type: KnowledgeQA
+    source: local
+    is_default: true
+    name: qwen2.5:3b
+    parameters:
+      context_window: 8192
+  - id: victor-local-embedding
+    type: Embedding
+    source: local
+    is_default: true
+    name: bge-m3
+    parameters:
+      embedding_parameters:
+        dimension: 1024

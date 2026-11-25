@@ -1,3 +1,4 @@
+import branding from '@/config/branding.json';
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";
@@ -28,6 +29,7 @@ initTheme();
 initFont();
 
 async function bootstrap() {
+  document.title = branding.name;
   const app = createApp(App);
 
   // 全局错误处理：捕获未处理的组件错误，防止白屏
