@@ -77,7 +77,7 @@ bash scripts/victor-update.sh --check-only
 
 日常验收使用 `secrets/acceptance-api-key`，无需管理员密码。其能力为检索和问答，空间范围为整个当前空间；请按私密凭据保护。备份同时保存数据库与 secrets，恢复时两者一起恢复。
 
-执行 `bash scripts/victor-package.sh`，在 `/data1/victor_wiki/artifacts/` 生成源码 Git bundle、服务镜像和公开模型权重包；模型包只包含 `models/`，不包含 Ollama 私钥。部署配置和账号凭据从受保护备份单独恢复。
+执行 `bash scripts/victor-package.sh`，在 `/data1/victor_wiki/artifacts/` 生成当前提交完整源码与提交号、服务镜像和公开模型权重包；模型包只包含 `models/`，不包含 Ollama 私钥。部署配置和账号凭据从受保护备份单独恢复。
 
 更新实际验证覆盖当前稳定版检查、候选保护、备份恢复和维护身份。未来版本的迁移与合并结果由当次检查决定，失败时保留当前版本。
 
