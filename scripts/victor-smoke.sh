@@ -6,3 +6,5 @@ compose exec -T ollama ollama list | grep -F 'qwen2.5:3b'
 compose exec -T ollama ollama list | grep -F 'bge-m3'
 
 bash "$ROOT/scripts/victor-acceptance.sh"
+
+bash "$ROOT/scripts/victor-assistant-acceptance.sh"

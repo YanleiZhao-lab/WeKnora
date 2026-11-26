@@ -29,7 +29,7 @@ bash scripts/victor-stop.sh
 
 通过 systemd 启动：`sudo systemctl start victor-wiki`。日志位于上述 logs 目录和 `journalctl -u victor-wiki`。
 
-默认对话模型选用非思考模型，以减少纯 CPU 的交互等待。模型为本机 Ollama 的 qwen2.5:3b 与 bge-m3（1024 维）。应用使用容器内部端点，不配置云模型、云解析或云端追踪。外网仅用于下载公共依赖、镜像、模型和同步公共源码。图谱使用本地 Neo4j；数据库和模型端口不发布到局域网。Neo4j 默认匿名使用统计已关闭。
+默认对话模型选用非思考模型，以减少纯 CPU 的交互等待。模型为本机 Ollama 的 qwen2.5:3b 与 bge-m3（1024 维）。默认使用容器内部本地端点，未预设远程模型、云解析或云端追踪；当前外网用于下载公共依赖、镜像、模型和同步公共源码。用户可在模型管理中手动添加第三方 API；选用远程模型后，问题、检索片段和相关对话会发送至该服务商。图谱使用本地 Neo4j；数据库和模型端口不发布到局域网。Neo4j 默认匿名使用统计已关闭。
 
 Ollama 固定为 `0.40.18`，启用 `OLLAMA_NO_CLOUD=true`，健康检查通过后应用才启动。
 
@@ -86,3 +86,13 @@ bash scripts/victor-update.sh --check-only
 已验证合成 Markdown 解析、原文 ID 检索、简短正确的本地回答与聊天来源引用；回答为“根据资料，星河计划的资料复查周期为21天。”。完整数据库、文件、Redis、Neo4j 与 secrets 备份恢复后，同一维护 API Key 检索和问答再次通过。全部容器健康，systemd 主服务已启用。纯 CPU 的完整知识问答约需数分钟，实际资料质量仍需抽样检查。
 
 GitHub 源码同步已真实运行成功；继承的13个构建/发布工作流已关闭。本机每日检查已启用并实际执行，确认 v0.9.1 已为当前稳定版；未模拟尚未发布版本的数据库迁移。
+
+## 本地上下文与第三方 API
+
+本地 Qwen2.5 3B 的应用声明和 Ollama 运行窗口统一为 32768 token，模型单次输出上限为 2048 token。Agent 直接使用模型的 max_output_tokens 约束，不修改所有 Agent 的通用输出预算；网页选择其他模型后使用该模型自身的上下文和输出配置。CPU 处理完整工具说明需要较长预填充，Agent 无输出等待为15分钟，流式请求总超时为30分钟。
+
+第三方 API 由用户在网页模型管理中添加：使用服务商提供的 Base URL、API Key、精确模型名称和支持的接口类型，并填写其真实上下文窗口及最大输出长度。对话模型可选择远程模型，本地 bge-m3 向量模型继续使用；已有知识库无需仅因更换对话模型而重建向量索引。
+
+`bash scripts/victor-assistant-acceptance.sh` 验证内置 WeKnora 助手的真实工具调用路径，要求 list_documents 真实调用成功并回答合成文档文件名；只允许读取合成验收知识库。该项针对本次空正文/length 报错，victor-smoke.sh 会依次执行普通 RAG 和此项工具验收。日常使用维护 API Key；手动增加 --owner 可验证网页管理员对应的权限路径，这个模式需要账号文件中的密码仍然有效。
+
+2026-11-26 修复验收：维护 API Key 的7工具路径、网页管理员的20工具只读路径均成功执行 list_documents 并返回 victor-acceptance.md。应用模型目录为32768/2048，Ollama /api/ps 实际窗口32768；普通 RAG 回归仍正确回答21天并包含原文引用。管理员冷启动长提示词约7分20秒，工具后的第二轮约14秒。部署前备份为 `/data1/victor_wiki/backups/pre-model-context-20261126-154614`，对应旧源码保留在 `/home/lenovo/victor_wiki/releases/pre-model-context-60470afd`。
